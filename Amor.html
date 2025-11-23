@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Amor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            perspective: 1000px;
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope-back {
+            width: 100%;
+            height: 100%;
+            background: #f4e8d8;
+            border: 2px solid #d4a574;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .envelope-front {
+            width: 100%;
+            height: 50%;
+            background: #f4e8d8;
+            border: 2px solid #d4a574;
+            position: absolute;
+            bottom: 0;
+            z-index: 3;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+        }
+
+        .envelope-top {
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #e8d4b8;
+            position: absolute;
+            top: 0;
+            z-index: 4;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            border-top-color: #e8d4b8;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .envelope.open .envelope-top {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope.open .envelope-front {
+            transform: rotateX(180deg);
+        }
+
+        .letter {
+            width: 260px;
+            height: 350px;
+            background: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 20%);
+            z-index: 2;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.8s ease;
+            border-radius: 5px;
+        }
+
+        .envelope.open .letter {
+            transform: translate(-50%, -120%);
+            opacity: 1;
+        }
+
+        .heart {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin: 20px auto;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            width: 50px;
+            height: 80px;
+            background: #ff4757;
+            border-radius: 50px 50px 0 0;
+            position: absolute;
+        }
+
+        .heart:before {
+            left: 50px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.15); }
+        }
+
+        .message {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .message h1 {
+            font-size: 32px;
+            color: #7de064;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-in 0.5s both;
+        }
+
+        .message p {
+            font-size: 16px;
+            line-height: 1.6;
+            animation: fadeIn 1s ease-in 1s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #955fa5;
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .click-instruction {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px;
+            animation: pulse 2s ease-in-out infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .envelope.open + .click-instruction {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="envelope" id="envelope">
+            <div class="envelope-back"></div>
+            <div class="envelope-top"></div>
+            <div class="envelope-front"></div>
+            <div class="letter">
+                <div class="heart"></div>
+                <div class="message">
+                    <h1>¡TE AMO MI GORDITA!</h1>
+                    <p>FELIZ ANIVERSARIO MI PRINCESA HERMOSA DE MI VIDA TE AMOOOOOOOO.</p>
+                    <p>💕 Con todo mi amor 💕</p>
+                </div>
+            </div>
+        </div>
+        <div class="click-instruction">Haz clic en el sobre ↑</div>
+    </div>
+
+    <script>
+        const envelope = document.getElementById('envelope');
+        const particlesContainer = document.getElementById('particles');
+
+        envelope.addEventListener('click', function() {
+            if (!this.classList.contains('open')) {
+                this.classList.add('open');
+                createParticles();
+            }
+        });
+
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 2 + 's';
+                    particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    particlesContainer.appendChild(particle);
+
+                    setTimeout(() => particle.remove(), 5000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
